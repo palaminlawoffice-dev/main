@@ -25,6 +25,8 @@
             --toggle-bg: #ffffff;
             --toggle-border: #c5a059;
             --toggle-text: #111111;
+            --menu-bg: #ffffff;
+            --menu-hover: #f5f5f5;
         }
 
         /* ธีมโหมดมืด (Dark Mode) */
@@ -42,6 +44,8 @@
             --toggle-bg: #242424;
             --toggle-border: #c5a059;
             --toggle-text: #ffffff;
+            --menu-bg: #1e1e1e;
+            --menu-hover: #2d2d2d;
         }
 
         * {
@@ -63,7 +67,7 @@
             position: relative;
         }
 
-        /* ปุ่มเปลี่ยน Dark Mode / White Mode ที่มุมขวาบน */
+        /* ปุ่มเปลี่ยน Dark Mode / White Mode ที่มุมขวาบน (ปรับปรุงให้แสดงเฉพาะไอคอน) */
         .theme-toggle-btn {
             position: absolute;
             top: 20px;
@@ -71,19 +75,19 @@
             background: var(--toggle-bg);
             border: 2px solid var(--toggle-border);
             color: var(--toggle-text);
-            padding: 8px 14px;
-            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 1rem;
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             z-index: 10;
         }
         .theme-toggle-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .container {
@@ -309,18 +313,220 @@
         .toast.show {
             transform: translateX(-50%) translateY(0);
         }
+
+        /* --- สไตล์ส่วนขยายเพิ่มเติม --- */
+        
+        /* สไตล์โลโก้ขยายใหญ่ (Modal Lightbox) */
+        .logo-box {
+            cursor: pointer;
+        }
+        .logo-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .logo-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .logo-modal img {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            border: 4px solid #c5a059;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: cover;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .logo-modal.active img {
+            transform: scale(1);
+        }
+
+        /* --- เพิ่มเติม: ระบบ Side Navigation Menu (ขีด 3 ขีด) --- */
+        .menu-toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--toggle-bg);
+            border: 2px solid var(--toggle-border);
+            color: var(--toggle-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+        .menu-toggle-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 9990;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .side-menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--menu-bg);
+            border-right: 2px solid #c5a059;
+            z-index: 9991;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.25);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 25px 18px;
+        }
+        .side-menu.active {
+            left: 0;
+        }
+
+        .side-menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--divider-color);
+            margin-bottom: 20px;
+        }
+        .side-menu-title {
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .side-menu-title i {
+            color: #c5a059;
+        }
+        .close-menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s ease;
+        }
+        .close-menu-btn:hover {
+            transform: scale(1.15);
+            color: #d93838;
+        }
+
+        .side-menu-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .menu-item i {
+            font-size: 1.1rem;
+            color: #c5a059;
+            width: 22px;
+            text-align: center;
+        }
+        .menu-item:hover, .menu-item.active {
+            background: var(--menu-hover);
+            border-left: 4px solid #c5a059;
+            padding-left: 11px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- ปุ่มสลับ Dark Mode / White Mode ที่มุมขวาบน -->
-    <button class="theme-toggle-btn" onclick="toggleThemeManually()" id="themeBtn">
-        <i class="fa-solid fa-moon"></i> <span>Dark Mode</span>
+    <!-- ปุ่มเมนู 3 ขีด ที่มุมซ้ายบน -->
+    <button class="menu-toggle-btn" onclick="openSideMenu()" title="เปิดเมนู">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- ฉากหลังมืดเมื่อเปิดเมนู -->
+    <div class="side-menu-overlay" id="menuOverlay" onclick="closeSideMenu()"></div>
+
+    <!-- Side Navigation Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <div class="side-menu-title">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>เมนูหลัก</span>
+            </div>
+            <button class="close-menu-btn" onclick="closeSideMenu()" title="ปิดเมนู">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <nav class="side-menu-nav">
+            <!-- Tab ช่องทางติดต่อ (Tab หลัก) -->
+            <a href="#" class="menu-item active" onclick="closeSideMenu(); return false;">
+                <i class="fa-solid fa-address-book"></i>
+                <span>ช่องทางติดต่อ</span>
+            </a>
+
+            <!-- พื้นที่สำรองสำหรับเพิ่ม Tab เมนูในอนาคต -->
+            <!--
+            <a href="#" class="menu-item" onclick="closeSideMenu(); return false;">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>เกี่ยวกับสำนักงาน</span>
+            </a>
+            <a href="#" class="menu-item" onclick="closeSideMenu(); return false;">
+                <i class="fa-solid fa-gavel"></i>
+                <span>ขอบเขตบริการ</span>
+            </a>
+            -->
+        </nav>
+    </div>
+
+    <!-- ปุ่มสลับ Dark Mode / White Mode (เฉพาะไอคอน) ที่มุมขวาบน -->
+    <button class="theme-toggle-btn" onclick="toggleThemeManually()" id="themeBtn" title="สลับโหมดมืด/สว่าง">
+        <i class="fa-solid fa-moon"></i>
     </button>
 
     <div class="container">
-        <!-- โลโก้ส่วนหัว -->
-        <div class="logo-box">
+        <!-- โลโก้ส่วนหัว (กดคลิกเพื่อขยาย) -->
+        <div class="logo-box" onclick="openLogoModal()">
             <img src="https://lh3.googleusercontent.com/d/1LId2CNiHpG4157vkY2nu-NM06Eb_7Xxy" alt="สำนักงานทนายความ ปรมินทร์ วงษ์ชมภู">
         </div>
 
@@ -392,6 +598,11 @@
         <div class="thanks-text">ขอบคุณที่ไว้วางใจใช้บริการครับ :)</div>
     </div>
 
+    <!-- Modal แสดงรูปโลโก้ขยายใหญ่ -->
+    <div class="logo-modal" id="logoModal" onclick="closeLogoModal()">
+        <img src="https://lh3.googleusercontent.com/d/1LId2CNiHpG4157vkY2nu-NM06Eb_7Xxy" alt="สำนักงานทนายความ ปรมินทร์ วงษ์ชมภู">
+    </div>
+
     <!-- กล่องแจ้งเตือนก๊อปปี้สำเร็จ -->
     <div id="toast" class="toast">คัดลอกเรียบร้อย!</div>
 
@@ -408,10 +619,10 @@
             var btn = document.getElementById("themeBtn");
             if (isDark) {
                 body.setAttribute("data-theme", "dark");
-                btn.innerHTML = '<i class="fa-solid fa-sun"></i> <span>White Mode</span>';
+                btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
             } else {
                 body.removeAttribute("data-theme");
-                btn.innerHTML = '<i class="fa-solid fa-moon"></i> <span>Dark Mode</span>';
+                btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
             }
         }
 
@@ -445,6 +656,62 @@
                 window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + email, "_blank");
             }
         }
+
+        /* === ระบบขยายโลโก้ใหญ่ และคลิกปิดที่ไหนก็ได้ === */
+        function openLogoModal() {
+            document.getElementById("logoModal").classList.add("active");
+        }
+
+        function closeLogoModal() {
+            document.getElementById("logoModal").classList.remove("active");
+        }
+
+        /* === ฟังก์ชั่นระบบ Side Navigation Menu === */
+        function openSideMenu() {
+            document.getElementById("sideMenu").classList.add("active");
+            document.getElementById("menuOverlay").classList.add("active");
+        }
+
+        function closeSideMenu() {
+            document.getElementById("sideMenu").classList.remove("active");
+            document.getElementById("menuOverlay").classList.remove("active");
+        }
+
+        /* === เสียง Effect คลิกแบบ Minimal นุ่มลึก (Web Audio API) === */
+        var audioCtx = null;
+        function playMinimalClickSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                
+                var osc = audioCtx.createOscillator();
+                var gain = audioCtx.createGain();
+                
+                osc.type = 'sine'; // คลื่นเสียงไซน์ให้น้ำเสียงนุ่มนวล
+                osc.frequency.setValueAtTime(160, audioCtx.currentTime); // ความถี่ต่ำ สุขุม
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.04);
+                
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime); // ระดับเสียงพอดี ไม่ดังรบกวน
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch (e) {
+                // ป้องกัน Error ในเบราว์เซอร์ที่ไม่รองรับ
+            }
+        }
+
+        // ดักจับการคลิกทุกอย่างในหน้าเว็บเพื่อเล่นเสียง Minimal Click
+        document.addEventListener('click', function(e) {
+            playMinimalClickSound();
+        });
     </script>
 </body>
 </html>
