@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ContactLinker Version 1.1 -->
     <title>สำนักงานทนายความ ปรมินทร์ วงษ์ชมภู</title>
     
     <!-- เปลี่ยนไอคอนบน Tab เบราว์เซอร์ (Favicon) เป็นโลโก้สำนักงาน -->
@@ -65,13 +66,44 @@
             align-items: center;
             padding: 30px 15px;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* ปุ่มเปลี่ยน Dark Mode / White Mode ที่มุมขวาบน (ปรับปรุงให้แสดงเฉพาะไอคอน) */
-        .theme-toggle-btn {
+        /* กลุ่มปุ่มควบคุมด้านขวาบน */
+        .top-right-controls {
             position: absolute;
             top: 20px;
             right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        /* ปุ่มแสดงเวลาแบบ Minimal (Real-time Clock) */
+        .clock-badge {
+            background: var(--toggle-bg);
+            border: 2px solid var(--toggle-border);
+            color: var(--toggle-text);
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .clock-badge i {
+            color: #c5a059;
+            font-size: 0.8rem;
+        }
+
+        /* ปุ่มเปลี่ยน Dark Mode / White Mode ที่มุมขวาบน */
+        .theme-toggle-btn {
             background: var(--toggle-bg);
             border: 2px solid var(--toggle-border);
             color: var(--toggle-text);
@@ -84,7 +116,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            z-index: 10;
+            flex-shrink: 0;
         }
         .theme-toggle-btn:hover {
             transform: scale(1.08);
@@ -159,7 +191,6 @@
             font-weight: 700;
             font-size: 0.85rem;
             letter-spacing: 0.5px;
-            /* ปรับ Padding ชดเชยฝั่งซ้ายเพื่อบาลานซ์พื้นที่ไอคอน ให้ข้อความอยู่ตรงกลางเป๊ะ */
             padding-left: 34px;
             padding-right: 10px;
             box-shadow: 0 3px 6px rgba(0,0,0,0.06);
@@ -263,7 +294,7 @@
             margin-top: 1px;
         }
 
-        /* ปุ่มคัดลอก (Copy Button) ให้อยู่ชั้นบนสุด (z-index) */
+        /* ปุ่มคัดลอก (Copy Button) */
         .copy-btn {
             position: absolute;
             right: 8px;
@@ -314,8 +345,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* --- สไตล์ส่วนขยายเพิ่มเติม --- */
-        
         /* สไตล์โลโก้ขยายใหญ่ (Modal Lightbox) */
         .logo-box {
             cursor: pointer;
@@ -354,7 +383,7 @@
             transform: scale(1);
         }
 
-        /* --- เพิ่มเติม: ระบบ Side Navigation Menu (ขีด 3 ขีด) --- */
+        /* ระบบ Side Navigation Menu (ขีด 3 ขีด) */
         .menu-toggle-btn {
             position: absolute;
             top: 20px;
@@ -475,6 +504,17 @@
             border-left: 4px solid #c5a059;
             padding-left: 11px;
         }
+
+        /* พาร์ทิเคิลรูปตาชั่ง (Scale Fireworks Particle) */
+        .scale-particle {
+            position: fixed;
+            pointer-events: none;
+            color: #c5a059;
+            z-index: 99999;
+            opacity: 0.85;
+            will-change: transform, opacity;
+            transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.6s linear;
+        }
     </style>
 </head>
 <body>
@@ -504,25 +544,20 @@
                 <i class="fa-solid fa-address-book"></i>
                 <span>ช่องทางติดต่อ</span>
             </a>
-
-            <!-- พื้นที่สำรองสำหรับเพิ่ม Tab เมนูในอนาคต -->
-            <!--
-            <a href="#" class="menu-item" onclick="closeSideMenu(); return false;">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>เกี่ยวกับสำนักงาน</span>
-            </a>
-            <a href="#" class="menu-item" onclick="closeSideMenu(); return false;">
-                <i class="fa-solid fa-gavel"></i>
-                <span>ขอบเขตบริการ</span>
-            </a>
-            -->
         </nav>
     </div>
 
-    <!-- ปุ่มสลับ Dark Mode / White Mode (เฉพาะไอคอน) ที่มุมขวาบน -->
-    <button class="theme-toggle-btn" onclick="toggleThemeManually()" id="themeBtn" title="สลับโหมดมืด/สว่าง">
-        <i class="fa-solid fa-moon"></i>
-    </button>
+    <!-- ส่วนควบคุมด้านขวาบน (นาฬิกา + ปุ่มสลับธีม) -->
+    <div class="top-right-controls">
+        <div class="clock-badge" id="clockBadge" title="เวลาปัจจุบัน">
+            <i class="fa-regular fa-clock"></i>
+            <span id="realtimeClock">00:00:00</span>
+        </div>
+
+        <button class="theme-toggle-btn" onclick="toggleThemeManually()" id="themeBtn" title="สลับโหมดมืด/สว่าง">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
 
     <div class="container">
         <!-- โลโก้ส่วนหัว (กดคลิกเพื่อขยาย) -->
@@ -607,6 +642,18 @@
     <div id="toast" class="toast">คัดลอกเรียบร้อย!</div>
 
     <script>
+        // ระบบนาฬิกาเรียลไทม์ (Real-time Clock System)
+        function updateClock() {
+            var now = new Date();
+            var hours = String(now.getHours()).padStart(2, '0');
+            var minutes = String(now.getMinutes()).padStart(2, '0');
+            var seconds = String(now.getSeconds()).padStart(2, '0');
+            var timeString = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('realtimeClock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
         // ระบบตรวจจับเวลาอัตโนมัติ (6:00 - 18:00 = White Mode / 18:00 - 6:00 = Dark Mode)
         function applyTimeBasedTheme() {
             var currentHour = new Date().getHours();
@@ -677,9 +724,79 @@
             document.getElementById("menuOverlay").classList.remove("active");
         }
 
-        /* === เสียง Effect คลิกแบบ Minimal นุ่มลึก (Web Audio API) === */
+        /* === ระบบพาร์ทิเคิลกระจายแบบพลุรูปตาชั่ง (Scale Fireworks Effect) === */
+        function spawnScaleFireworks(x, y) {
+            var particleCount = 8; // จำนวนชิ้นตาชั่งที่กระจายออก
+            for (var i = 0; i < particleCount; i++) {
+                var p = document.createElement('i');
+                p.className = 'fa-solid fa-scale-balanced scale-particle';
+                
+                // สุ่มขนาดระหว่าง 10px - 16px
+                var size = Math.floor(Math.random() * 7) + 10;
+                p.style.fontSize = size + 'px';
+                p.style.left = x + 'px';
+                p.style.top = y + 'px';
+                
+                document.body.appendChild(p);
+                
+                // คำนวณมุมองศาและระยะการพุ่งออกของพลุ
+                var angle = (i * (360 / particleCount)) + (Math.random() * 20 - 10);
+                var distance = Math.floor(Math.random() * 35) + 35; // ระยะพุ่ง 35-70px
+                var rad = angle * Math.PI / 180;
+                
+                var moveX = Math.cos(rad) * distance;
+                var moveY = Math.sin(rad) * distance;
+                
+                // บังคับให้เบราว์เซอร์ Render ตำแหน่งเริ่มต้นก่อนใส่ Animation
+                (function(particle, mx, my) {
+                    requestAnimationFrame(function() {
+                        particle.style.transform = 'translate(' + mx + 'px, ' + my + 'px) scale(0.7) rotate(' + (Math.random() * 60 - 30) + 'deg)';
+                        particle.style.opacity = '0';
+                    });
+                    
+                    // ลบ Element ออกเมื่อทำงานจบ
+                    setTimeout(function() {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 650);
+                })(p, moveX, moveY);
+            }
+        }
+
+        // ระบบคลิกค้างไว้แล้วปล่อยพลุต่อเนื่อง (Hold Click / Long Press)
+        var holdTimer = null;
+        var lastCoords = { x: 0, y: 0 };
+
+        document.addEventListener('pointerdown', function(e) {
+            lastCoords.x = e.clientX;
+            lastCoords.y = e.clientY;
+            
+            // สร้างพลุชุดแรกทันทีที่กด
+            spawnScaleFireworks(e.clientX, e.clientY);
+            
+            // หากคลิกค้างไว้เกิน 250ms จะทยอยสร้างพลุออกมาเรื่อยๆ
+            holdTimer = setInterval(function() {
+                spawnScaleFireworks(lastCoords.x, lastCoords.y);
+            }, 200);
+        });
+
+        document.addEventListener('pointermove', function(e) {
+            lastCoords.x = e.clientX;
+            lastCoords.y = e.clientY;
+        });
+
+        document.addEventListener('pointerup', function() {
+            if (holdTimer) clearInterval(holdTimer);
+        });
+
+        document.addEventListener('pointercancel', function() {
+            if (holdTimer) clearInterval(holdTimer);
+        });
+
+        /* === เสียง Effect คลิกแบบ นุ่มนวล ใส และสุขุม (Web Audio API) === */
         var audioCtx = null;
-        function playMinimalClickSound() {
+        function playSoftBrightClickSound() {
             try {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -688,29 +805,53 @@
                     audioCtx.resume();
                 }
                 
-                var osc = audioCtx.createOscillator();
-                var gain = audioCtx.createGain();
+                var now = audioCtx.currentTime;
                 
-                osc.type = 'sine'; // คลื่นเสียงไซน์ให้น้ำเสียงนุ่มนวล
-                osc.frequency.setValueAtTime(160, audioCtx.currentTime); // ความถี่ต่ำ สุขุม
-                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.04);
+                // 1. คลื่นเสียงหลัก ให้ความสดใส ใสปิ๊ง (Sine wave ความถี่สูงขึ้นเล็กน้อย)
+                var osc1 = audioCtx.createOscillator();
+                var gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(520, now);
+                osc1.frequency.exponentialRampToValueAtTime(260, now + 0.05);
                 
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime); // ระดับเสียงพอดี ไม่ดังรบกวน
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                // ปรับระดับความดังลดลง 4% จากเดิม (0.132 -> 0.12672)
+                gain1.gain.setValueAtTime(0.12672, now); 
+                gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
                 
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
                 
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.04);
+                osc1.start(now);
+                osc1.stop(now + 0.05);
+
+                // 2. คลื่นเสียงนุ่มลึกเสริมมิติ ให้ความรู้สึกนุ่มนวล ไม่บาดหู
+                var osc2 = audioCtx.createOscillator();
+                var gain2 = audioCtx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(320, now);
+                osc2.frequency.exponentialRampToValueAtTime(140, now + 0.04);
+                
+                // ปรับระดับความดังลดลง 4% จากเดิม (0.055 -> 0.0528)
+                gain2.gain.setValueAtTime(0.0528, now);
+                gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+                
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                
+                osc2.start(now);
+                osc2.stop(now + 0.04);
+
             } catch (e) {
                 // ป้องกัน Error ในเบราว์เซอร์ที่ไม่รองรับ
             }
         }
 
-        // ดักจับการคลิกทุกอย่างในหน้าเว็บเพื่อเล่นเสียง Minimal Click
+        // ดักจับการคลิกเฉพาะองค์ประกอบที่เป็น UI / ปุ่มกด / เมนู เท่านั้น (ไม่เล่นเสียงเมื่อกด Background)
         document.addEventListener('click', function(e) {
-            playMinimalClickSound();
+            var targetUI = e.target.closest('a, button, .btn-card, .btn-card-large, .logo-box, .menu-item, .copy-btn, .theme-toggle-btn, .menu-toggle-btn');
+            if (targetUI) {
+                playSoftBrightClickSound();
+            }
         });
     </script>
 </body>
